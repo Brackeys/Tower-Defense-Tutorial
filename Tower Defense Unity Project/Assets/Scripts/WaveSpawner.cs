@@ -4,6 +4,13 @@ using UnityEngine.UI;
 
 public class WaveSpawner : MonoBehaviour {
 
+	public GameObject simple; //b
+	public GameObject fast; //f
+	public GameObject tough; //t
+	public GameObject flying; //a
+	public GameObject flyingFast; //s
+	public GameObject flyingTank; //d
+	
 	public static int EnemiesAlive = 0;
 
 	public Wave[] waves;
@@ -15,8 +22,6 @@ public class WaveSpawner : MonoBehaviour {
 
 	public Text waveCountdownText;
 
-	public GameManager gameManager;
-
 	private int waveIndex = 0;
 
 	void Update ()
@@ -24,12 +29,6 @@ public class WaveSpawner : MonoBehaviour {
 		if (EnemiesAlive > 0)
 		{
 			return;
-		}
-
-		if (waveIndex == waves.Length)
-		{
-			gameManager.WinLevel();
-			this.enabled = false;
 		}
 
 		if (countdown <= 0f)
@@ -51,21 +50,50 @@ public class WaveSpawner : MonoBehaviour {
 		PlayerStats.Rounds++;
 
 		Wave wave = waves[waveIndex];
-
-		EnemiesAlive = wave.count;
-
-		for (int i = 0; i < wave.count; i++)
+		string enemyQueu = (string)wave.DecodeEnemyQueu();
+		for (int i = 0; i < enemyQueu.Length; i++)
 		{
-			SpawnEnemy(wave.enemy);
+			SpawnEnemy(enemyQueu.Substring(i,1));
 			yield return new WaitForSeconds(1f / wave.rate);
 		}
 
 		waveIndex++;
+
+		if (waveIndex == waves.Length)
+		{
+			Debug.Log("LEVEL WON!");
+			this.enabled = false;
+		}
 	}
 
-	void SpawnEnemy (GameObject enemy)
+	void SpawnEnemy (string enemy)
 	{
-		Instantiate(enemy, spawnPoint.position, spawnPoint.rotation);
+		//switch case
+		//Instantiate(enemy, spawnPoint.position, spawnPoint.rotation);
+		switch(enemy)
+		{
+			case "b":
+				Instantiate(simple, spawnPoint.position, spawnPoint.rotation);
+				break;
+			case "f":
+				Instantiate(fast, spawnPoint.position, spawnPoint.rotation);
+				break;
+			case "t":
+				Instantiate(tough, spawnPoint.position, spawnPoint.rotation);
+				break;
+			case "a":
+				Instantiate(flying, spawnPoint.position, spawnPoint.rotation);
+				break;
+			case "s":
+				Instantiate(flyingFast, spawnPoint.position, spawnPoint.rotation);
+				break;
+			case "d":
+				Instantiate(flyingTank, spawnPoint.position, spawnPoint.rotation);
+				break;
+			// default:
+				// Debug.Log(enemy);
+		}
+		EnemiesAlive++;
 	}
 
 }

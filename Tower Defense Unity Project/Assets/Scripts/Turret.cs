@@ -31,7 +31,8 @@ public class Turret : MonoBehaviour {
 
 	public Transform partToRotate;
 	public float turnSpeed = 10f;
-
+	public bool CanTargetLand = true;
+	public bool CanTargetAir = false;
 	public Transform firePoint;
 
 	// Use this for initialization
@@ -49,8 +50,17 @@ public class Turret : MonoBehaviour {
 			float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
 			if (distanceToEnemy < shortestDistance)
 			{
-				shortestDistance = distanceToEnemy;
-				nearestEnemy = enemy;
+				Enemy _enemy = enemy.GetComponent<Enemy>();
+				if (CanTargetAir && _enemy.IsFlying)
+				{
+					shortestDistance = distanceToEnemy;
+					nearestEnemy = enemy;
+				}
+				if(CanTargetLand && _enemy.IsOnGround)
+				{
+					shortestDistance = distanceToEnemy;
+					nearestEnemy = enemy;
+				}
 			}
 		}
 
