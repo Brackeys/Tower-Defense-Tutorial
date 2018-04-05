@@ -15,6 +15,7 @@ public class Enemy : MonoBehaviour {
 	public bool IsOnGround = true;
 
 	public int worth = 50;
+	public int damage = 1;
 
 	public GameObject deathEffect;
 
